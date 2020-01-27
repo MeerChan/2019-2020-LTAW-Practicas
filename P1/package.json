@@ -1,13 +1,13 @@
 {
-  "name": "hello",
-  "description": "Proyecto hola mundo",
+  "name": "web-server",
+  "description": "Servidor web hola mundo",
   "keywords": [
     "ltaw",
     "test"
   ],
   "version": "0.0.1",
   "author": "Juan Gonzalez-Gómez (Obijuan)",
-  "main": "hello.js",
+  "main": "server.js",
   "devDependencies": {},
   "license": "GPL-3.0",
   "repository": {
@@ -15,7 +15,7 @@
     "url": "https://github.com/Obijuan/2019-2020-LTAW-Practicas.git"
   },
   "scripts": {
-    "start": "node hello.js",
+    "start": "node server.js",
     "test": "node -v"
   }
 }

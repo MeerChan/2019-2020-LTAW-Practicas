@@ -9,11 +9,11 @@ console.log("Arrancando servidor...")
 http.createServer((req,res) =>{
   console.log("---> Peticion recibida")
   console.log("Recurso solicitado (URL): " + req.url)
-  const cabecera = req.headers;
+  for (prop in req.headers) {
+    console.log("Propiedad: " + prop + " --> Valor: " + req.headers[prop])
+  }
 }).listen(PUERTO);
-for (prop in cabecera) {
-  console.log("Propiedad: " + prop + " --> Valor: " + cabecera[prop])
-}
+
 
 
 console.log("Servidor LISTO!")

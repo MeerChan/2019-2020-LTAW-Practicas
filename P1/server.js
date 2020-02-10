@@ -1,13 +1,12 @@
 //-- Puerto donde recibir las peticiones
 const PUERTO = 8080;
+//-- Modulo del sistema de ficheros
 const fs = require('fs');
 //-- Modulo http
 const http = require('http');
 
 console.log("Arrancando servidor...")
 
-
-//-- Leer el fichero. Al terminar se invoca a la función show_file
 
 
 //-- Funcion llamada cuando se ha terminado de leer el fichero

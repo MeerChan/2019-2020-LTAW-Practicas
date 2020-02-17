@@ -15,8 +15,11 @@ http.createServer((req, res) => {
 
   //-- Obtener fichero a devolver
   if (q.pathname == "/")
-    filename += "index.html"
-
+    filename = "index.html"
+  if (q.pathname == "/css/micss.css")
+    filename = "micss.css"
+  if (q.pathname == "/css/micss.css")
+    filename = "node-logo.png"
   //-- Leer fichero
   fs.readFile(filename, function(err, data) {
 

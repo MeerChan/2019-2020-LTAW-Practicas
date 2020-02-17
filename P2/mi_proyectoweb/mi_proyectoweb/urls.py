@@ -13,15 +13,15 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
-from django.urls import path
+from django.contrib import admin
+from django.urls import include, path
 
-# -- Importar todas las vistas de mi_tienda
-from . import views
-
-# -- Aquí se definen las URLs de nuestra tienda
-# -- Metemos de momento sólo la principal (índice)
+# -- Recursos de mi proyecto web
 
 urlpatterns = [
-    # -- Vista pricipal (índice)
-    path('', views.index, name='index'),
+    # -- Esta es la URL de mi tienda
+    path('mi_tienda/', include('mi_tienda.urls')),
+
+    # -- URL de administracion (por defecto en django)
+    path('admin/', admin.site.urls),
 ]

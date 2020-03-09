@@ -8,10 +8,16 @@ const PUERTO = 8080
 http.createServer((req, res) => {
   let q = url.parse(req.url, true),
       filename = '';
+  const cookie = req.headers.cookie;
   if (q.pathname == '/') {
-    filename = 'index.html'
+    if (!cookie) {
+        filename = 'index.html'
+      } else {
+        filename = 'index2.html'
+      }
   } else if (q.pathname == '/myform') {
-
+    res.setHeader('Set-Cookie', 'user=Nakama')
+    filename = 'index2.html'
   } else {
     filename = q.pathname.slice(1);
   }

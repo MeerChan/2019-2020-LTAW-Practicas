@@ -1,23 +1,12 @@
+{% extends "base.html" %}
+{% block content %}
 {% load staticfiles %}
-<!DOCTYPE html>
-<html lang="es" dir="ltr">
-  <head>
-    <meta charset="utf-8">
-    <title>Mi tienda</title>
-    <link rel="stylesheet" href="{% static 'css/tienda.css' %}">
-  </head>
-  <body>
-    <span id="header">TIENDA POSTERS DRAGON BALL</span>
-    <br>
-    <img class="img-header" src="{% static 'image/index.png' %}" alt="">
-    <div>
-      <a href="goku">Goku</a>
-      <a href="vegeta">Vegeta</a>
-      <a href="frezer">Frezer</a>
-    </div>
-    <img src="{% static 'image/goku.jpg' %}" width="300" height="200">
-    <img src="{% static 'image/vegeta.jpeg' %}" width="300" height="200">
-    <img src="{% static 'image/frezer.png' %}" width="300" height="200">
-
-  </body>
-</html>
+{% for prod in productos %}
+      <div style = "width: 25%; text-align: center; display: block; margin:auto">
+        <a href="p_{{prod.nombre}}">
+        <p >{{prod.nombre}}</p>
+        <img src="{% static prod.imagen %}" width="300" height="200"/>
+        </a>
+      </div>
+{% endfor %}
+{% endblock %}

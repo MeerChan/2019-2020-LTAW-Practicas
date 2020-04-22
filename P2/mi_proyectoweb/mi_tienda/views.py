@@ -4,12 +4,14 @@ from django.template.loader import get_template
 from django.shortcuts import render
 from random import randint
 from mi_tienda.models import Producto
+from mi_tienda.models import Pedido
 
 # -- Vista principal de mi tienda
 # -- El nombre de la vista puede ser cualquiera. Nosotros lo hemos
 # -- llamado index, pero se podría haber llamado pepito
 def index(request):
-    return render(request, 'index.html')
+    productos = Producto.objects.all()
+    return render(request, 'index.html', {'productos':productos})
 
 # -- Ejemplo de generacion a partir de cadenas con código html
 def test1(request):
@@ -102,14 +104,13 @@ def list(request):
         html += '<p>'+ prod.nombre + ' ' + str(prod.precio) + '<p>'
     return HttpResponse(html)
 
-def goku(request):
-    productos = Producto.objects.all()
-    return render(request, 'goku.html', {'productos':productos[0]})
+def personajes(request,personaje):
+    producto = Producto.objects.get(nombre=personaje)
+    return render(request, 'personajes.html', {'producto':producto})
 
-def vegeta(request):
-    productos = Producto.objects.all()
-    return render(request, 'vegeta.html', {'productos':productos[1]})
 
-def frezer(request):
-    productos = Producto.objects.all()
-    return render(request, 'frezer.html', {'productos':productos[2]})
+def recepcion1(request):
+    # -- Obtener el nombre de la persona
+    pedido = Pedido(nombre=request.POST['nombre'], compra=request.POST['compra'])
+    pedido.save()
+    return index(request)

@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block content %}
+{% load staticfiles %}
+  <a href="/mi_tienda">Página principal</a>
+  <br>
+  {% load staticfiles %}
+  <img src= "{% static producto.imagen %}" alt="imagen de {{ producto.nombre }}">
+  <form  action="/mi_tienda/recepcion1" method="post">
+    {% csrf_token %}
+    <label>Nombre de la persona que hace el pedido: <label>
+    <input type="text" name="nombre" value="" />
+    <input type="text" name="compra" value="{{ producto.nombre }}" readonly/>
+    <input type="submit" value="enviar"/>
+  </form>
+{% endblock %}

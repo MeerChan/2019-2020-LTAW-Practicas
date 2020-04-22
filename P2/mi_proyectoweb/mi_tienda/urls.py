@@ -15,7 +15,6 @@ urlpatterns = [
     path('test4/', views.test4, name='test4'),
     path('test5/', views.test5, name='test5'),
     path('list/', views.list, name='list'),
-    path('goku/', views.goku, name='goku'),
-    path('vegeta/', views.vegeta, name='vegeta'),
-    path('frezer/', views.frezer, name='frezer'),
+    path('p_<personaje>/', views.personajes, name='personajes'),
+    path('recepcion1', views.recepcion1, name='recepcion1'),
 ]

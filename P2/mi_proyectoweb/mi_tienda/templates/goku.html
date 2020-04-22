@@ -1,0 +1,18 @@
+
+<!DOCTYPE html>
+<html lang="es" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>Artículo 1</title>
+    <link rel="stylesheet" href="/css/goku.css">
+  </head>
+  <body>
+    <a href="/mi_tienda">Página principal</a>
+    <br>
+    {% load staticfiles %}
+    <img src= "{% static 'image/goku.jpg' %}" alt="imagen de goku">
+    <br>
+    {% csrf_token %}
+    {{ productos.nombre }}: --> Precio: {{productos.precio}}
+  </body>
+</html>

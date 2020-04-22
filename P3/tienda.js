@@ -15,12 +15,21 @@ http.createServer((req, res) => {
       } else {
         filename = 'index2.html'
       }
-  } else if (q.pathname == '/myform') {
-    res.setHeader('Set-Cookie', 'user=Nakama')
-    filename = 'index2.html'
   } else {
     filename = q.pathname.slice(1);
   }
+  //la primera vez que se pulse el boton de registrame y nos muestre index2 se crea la cookie
+  if (q.pathname == '/index2.html') {
+    if (!cookie) {
+        console.log("entra")
+        res.setHeader('Set-Cookie', 'user=Nakama; []');
+      }
+  }
+
+
+
+
+
   let extension = filename.split('.')[1],
       code = 200,
       mime = 'text/html';
@@ -46,7 +55,7 @@ http.createServer((req, res) => {
   fs.readFile(filename, (err, data) => {
     if (err){
       res.writeHead(404, {'Content-Type': 'text/html'})
-      return res.end('SUPER-ERROR: file not found');
+      return res.end('Error: file not found');
     }
     res.writeHead(code, {'Content-Type': mime});
     res.write(data);

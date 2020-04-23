@@ -86,6 +86,7 @@ http.createServer((req, res) => {
               </head>
               <body>
                 <p>Tienes en el carro:`
+                //leo de la cookie los productos y los muestro
                 const infocookie = req.headers.cookie;
                 const numeroprod = infocookie.split('; ').length
                 var cookieentera = ""
@@ -97,7 +98,7 @@ http.createServer((req, res) => {
                 }
                 content += `
                     </p>
-                    <form style="text-align:center" action="/myformfinal" method="post">
+                    <form action="/myformfinal" method="post">
                       Nombre:
                       <input type="text" name="Nombre" value=""/> <br />
                       Apellido:
@@ -122,6 +123,88 @@ http.createServer((req, res) => {
                res.write(content);
                res.end();
                return
+      };
+      break
+    case "myformfinal":
+    console.log(req.method);
+      if (req.method == 'POST'){
+        var content = `
+            <!DOCTYPE html>
+            <html lang="es">
+              <head>
+                <meta charset="utf-8">
+                <title>Terminar Compra</title>
+              </head>
+              <body>
+                <p>Compra finalizada! Has comprado los siguientes productos:`
+                const infocookie = req.headers.cookie;
+                const numeroprod = infocookie.split('; ').length
+                var cookieentera = ""
+                var producto = ""
+                for (var i = 1; i < numeroprod; i++) {
+                  cookieentera = infocookie.split('; ')[i]
+                  producto = cookieentera.split("=")[1]
+                  content += (" " + producto)
+                }
+                content += `
+                </p>
+                <br>
+                <p>Los datos de dicha compra son los siguientes:`
+                req.on('data', chunk => {
+                    //-- Leer los datos (convertir el buffer a cadena)
+                    data = chunk.toString();
+                    console.log(data)
+                    const nombre = data.split('&')[0]
+                    const valornombre = nombre.split('=')[1]
+
+                    const apellido = data.split('&')[1]
+                    const valorapellido = apellido.split('=')[1]
+
+                    const correo = data.split('&')[2]
+                    const valorcorreo = correo.split('=')[1]
+
+                    const metodopago = data.split('&')[3]
+                    var valorpago = metodopago.split('=')[1]
+                    console.log(valorpago)
+                    switch(valorpago){
+                      case"1":
+                        valorpago = "Paypal"
+                        break
+                      case"2":
+                        valorpago = "Tarjeta de crédito"
+                        break
+                      case"3":
+                        valorpago = "Transferencia bancaria"
+                        break
+                      default:
+                        valorpago = "Error no deberias llegar aqui"
+                        break
+                    }
+                    var pasardatos = ("<br> Nombre: " + valornombre
+                                   + "<br> Apellido: " + valorapellido
+                                   + "<br> Correo: " + valorcorreo
+                                   + "<br> Metodo de pago: " + valorpago);
+                    content += pasardatos;
+
+                    content += `
+                        <br>
+                        </p>
+                        <a href="/">Pagina principal</a>
+                      </body>
+                    </html>
+                    `
+                    //-- Mostrar los datos en la consola del servidor
+                    console.log("Datos recibidos: " + data)
+                    res.statusCode = 200;
+                 });
+
+                 req.on('end', ()=> {
+                   //-- Generar el mensaje de respuesta
+                   res.setHeader('Content-Type', 'text/html')
+                   res.write(content);
+                   res.end();
+                 })
+                 return
       };
       break
     default:

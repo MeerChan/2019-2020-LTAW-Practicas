@@ -4,13 +4,14 @@ const fs = require('fs');
 const PUERTO = 8080
 var productos = "";
 var contador = 0;
+let items = ["goku", "vegeta", "frezer"];
 //-- Configurar y lanzar el servidor. Por cada peticion recibida
 //-- se imprime un mensaje en la consola
 http.createServer((req, res) => {
   let q = url.parse(req.url, true),
       filename = '';
   const cookie = req.headers.cookie;
-
+  let parametros = q.query;
   if (q.pathname == '/') {
     if (!cookie) {
         filename = 'index.html'
@@ -29,7 +30,6 @@ http.createServer((req, res) => {
   }
 
   console.log(filename)
-  console.log("VECEEEEEEEEES")
   switch (filename){
     case "listacompra.html":
       if (req.method == 'POST'){
@@ -46,7 +46,6 @@ http.createServer((req, res) => {
             req.on('data', chunk => {
                 //-- Leer los datos (convertir el buffer a cadena)
                 data = chunk.toString();
-                console.log(data)
                 productoactual = data.split('=')[1],
                 productos += " "
                 productos += productoactual
@@ -75,7 +74,6 @@ http.createServer((req, res) => {
       };
       break
     case "terminarcompra":
-    console.log(req.method);
       if (req.method == 'POST'){
         var content = `
             <!DOCTYPE html>
@@ -126,7 +124,6 @@ http.createServer((req, res) => {
       };
       break
     case "myformfinal":
-    console.log(req.method);
       if (req.method == 'POST'){
         var content = `
             <!DOCTYPE html>
@@ -153,7 +150,6 @@ http.createServer((req, res) => {
                 req.on('data', chunk => {
                     //-- Leer los datos (convertir el buffer a cadena)
                     data = chunk.toString();
-                    console.log(data)
                     const nombre = data.split('&')[0]
                     const valornombre = nombre.split('=')[1]
 
@@ -165,7 +161,6 @@ http.createServer((req, res) => {
 
                     const metodopago = data.split('&')[3]
                     var valorpago = metodopago.split('=')[1]
-                    console.log(valorpago)
                     switch(valorpago){
                       case"1":
                         valorpago = "Paypal"
@@ -207,46 +202,63 @@ http.createServer((req, res) => {
                  return
       };
       break
+
+    case "myquery":
+      let prod_encontrados = []
+      for (var i = 0; i < items.length; i++) {
+        if (items[i].indexOf(parametros.prod) != -1 && parametros.prod.length > 0) {
+          prod_encontrados.push(items[i]);
+        }
+      }
+      content = JSON.stringify(prod_encontrados);
+      res.setHeader('Content-Type', 'application/json')
+      res.write(content);
+      res.end();
+      break;
+
     default:
       content = "Error";
       res.statusCode = 404;
   }
-
-
-
-
-
-
-  let extension = filename.split('.')[1],
-      code = 200,
-      mime = 'text/html';
-  switch (extension) {
-    case 'png':
-    case 'jpg':
-    case 'ico':
-    case 'jpeg':
-      mime = 'image/' + extension;
-      break;
-    case 'css':
-    case 'html':
-      mime = 'text/' + extension;
-      break;
-    case 'json':
-      mime = 'application/' + extension;
-      break;
-    default:
-      code = 404;
-      filename = 'layout/error.html';
-  }
-  fs.readFile(filename, (err, data) => {
-    if (err){
-      res.writeHead(404, {'Content-Type': 'text/html'})
-      return res.end('Error: file not found');
+  if (filename != "myquery"){
+    let extension = filename.split('.')[1],
+        code = 200,
+        mime = 'text/html';
+    switch (extension) {
+      case 'png':
+      case 'jpg':
+      case 'ico':
+      case 'jpeg':
+        mime = 'image/' + extension;
+        break;
+      case 'css':
+      case 'html':
+        mime = 'text/' + extension;
+        break;
+      case 'json':
+        mime = 'application/' + extension;
+        break;
+      case 'js':
+        mime = 'application/javascript';
+        break;
+      default:
+        code = 404;
+        filename = 'layout/error.html';
     }
-    res.writeHead(code, {'Content-Type': mime});
-    res.write(data);
-    return res.end();
-  });
+    fs.readFile(filename, (err, data) => {
+      if (err){
+        res.writeHead(404, {'Content-Type': 'text/html'})
+        return res.end('Error: file not found');
+      }
+      res.writeHead(code, {'Content-Type': mime});
+      res.write(data);
+      return res.end();
+    });
+  }
+
+
+
+
 }).listen(PUERTO);
 
 console.log("Servidor corriendo...")

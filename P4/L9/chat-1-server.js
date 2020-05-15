@@ -46,11 +46,15 @@ app.use('/', express.static(__dirname +'/'));
 //-- Evento: Nueva conexion recibida
 //-- Un nuevo cliente se ha conectado!
 io.on('connection', function(socket){
-  contador += 1;
+
   //-- Usuario conectado. Imprimir el identificador de su socket
   console.log('--> Usuario conectado!. Socket id: ' + socket.id);
+  //-- Aumentamos el contador de usuarios
+  contador += 1;
+  //-- Le envia a todos el mensaje menos al que se acaba de unir.
+  socket.broadcast.emit('msg','server: ' + socket.id + ' se ha unido al chat');
+
   //-- Le damos la bienvenida a través del evento 'hello'
-  //-- ESte evento lo hemos creado nosotros para nuestro chat
   socket.emit('hello', "Eres el usuario numero " + contador);
 
   //-- respuesta a CMD mensajes de comandos
@@ -78,10 +82,11 @@ io.on('connection', function(socket){
     }
     socket.emit('msg', 'server: ' + respuesta);
   });
+
   //-- Función de retrollamada de mensaje recibido del cliente
   socket.on('msg', (msg) => {
-    console.log("Cliente: " + socket.id + ': ' + msg);
-
+    console.log("Usuario: " + socket.id + ': ' + msg);
+    msg = 'Usuario: ' + socket.id + ': ' + msg;
     //-- Enviar el mensaje a TODOS los clientes que estén conectados
     io.emit('msg', msg);
   })
@@ -90,5 +95,6 @@ io.on('connection', function(socket){
   socket.on('disconnect', function(){
     contador -= 1;
     console.log('--> Usuario Desconectado. Socket id: ' + socket.id);
+    socket.broadcast.emit('msg','server: ' + socket.id + ' ha dejado el chat');
   });
 });
